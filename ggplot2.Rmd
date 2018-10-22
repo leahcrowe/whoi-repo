@@ -28,14 +28,108 @@ visit_16 <- read_csv("https://raw.githubusercontent.com/OHI-Science/data-science
 #All Nationally designated sites in Massachusetts
 mass <- read_csv("https://raw.githubusercontent.com/OHI-Science/data-science-training/master/data/mass.csv")
 ```
+
+```{r}
+#Gapminder
+gapminder<-readr::read_csv('https://raw.githubusercontent.com/OHI-Science/data-science-training/master/data/gapminder.csv')
+
+#inspect dataset
+tail(gapminder)
+
+str(gapminder)
+#install.packages("skimr")
+library(skimr)
+skimr::skim(gapminder)
+
+names(gapminder)
+dim(gapminder)
+ncol(gapminder)
+nrow(gapminder)
+
+gapminder%>%
+  filter(country == "Sweden")%>%
+  summarise(mean=mean(lifeExp))
+
+swd<-gapminder%>%filter(country == "Sweden")
+mean(swd$lifeExp)
+
+gapminder %>%
+  mutate(gdp = pop*gdpPercap)
+
+head(gapminder)
+gapminder%>%
+  filter(country == "Egypt" | country == "Vietnam")%>%
+  mutate(maxgdp = max(gdpPercap))
+
+```
+
 ```{r}
 ggplot(se,aes (x = year, y = visitors, color = state))+
   geom_point()+
   theme_bw()+
-  theme(axis.text.x = element_text(angle = 45, size = 12, vjust = 0.5))+
+  theme(axis.text.x = element_text(angle = 45, size = 12, vjust = 0.5, hjust = 0.5))+
+  ggtitle("Visitors to National Parks by state")+
+  xlab("Year")+
+  ylab("Visitation")
+```
+
+#faceting plots
+```{r}
+ggplot(se,aes (x = year, y = visitors, color = park_name))+
+  geom_point()+
+  theme_bw()+
+  theme(axis.text.x = element_text(angle = 90, size = 12, vjust = 0.5, hjust = 0.5))+
+  ggtitle("Visitors to National Parks by state")+
+  xlab("Year")+
+  ylab("Visitation")+
+  facet_wrap(~state, scales = "free")
+```
+
+```{r}
+ggplot(se)+
+  geom_jitter(aes(x = park_name, y = visitors), alpha = 0.4, size = 3, color = "blue")+
+  theme_bw()+
+  theme(axis.text.x = element_text(size = 12, vjust = 0.5, hjust = 0.5))+
+  ggtitle("Visitors to National Parks by state")+
+  xlab("Year")+
+  ylab("Visitation")+
+  coord_flip()
+```
+
+```{r}
+ggplot(acadia,aes(x = year, y = visitors))+
+  geom_point(alpha = 0.4, size = 3, color = "blue")+
+  geom_line()+
+  geom_smooth()+
+  theme_bw()+
+  theme(axis.text.x = element_text(size = 12, vjust = 0.5, hjust = 0.5))+
   ggtitle("Visitors to National Parks by state")+
   xlab("Year")+
   ylab("Visitation")
 ```
 
 
+```{r}
+
+##summarise data to get number of parks visited in each year
+se_n<-se%>%
+  group_by(year)%>%
+  summarise(n=n())
+
+#this secondary axis hack is adding data as a proportion of the primary data
+ggplot()+
+  geom_bar(data = se, aes(x=year, y = visitors, fill = park_name), stat = "identity")+
+  #the geom_line() data is for the number of parks for year secondary data
+  #it needs to be multiplied by a value to show up on the primary axis
+  geom_line(data = se_n, aes(x = year, y = n*1500000), color = "black", size = 1)+
+  xlab("Year")+
+  scale_y_continuous(name = "Number parks visited each year",
+                     #the secondary axis limits are a proportion of the primary axis
+                     #here, I divided the primary axis by 1.5e+06 so that the limit on the right is 10
+                     sec.axis = sec_axis(~./1500000, name = 'Percent of visitors'))+
+  theme_bw()
+```
+
+```{r}
+library(tidyverse) #install.packages("tidyverse")
+```

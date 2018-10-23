@@ -7,7 +7,56 @@ output: html_document
 
 ```{r setup, include=FALSE}
 ## read in gapminder data in wide format
+library(tidyverse)
 gap_wide <- readr::read_csv('https://raw.githubusercontent.com/OHI-Science/data-science-training/master/data/gapminder_wide.csv')
-
 ```
+## tidyr::gather()
+
+```{r}
+gap_long <- gap_wide%>%
+  gather(key = obstype_year,
+         value = obs_values,
+         -continent,-country)
+```
+## tidyr::separate()
+```{r}
+gap_long <- gap_wide%>%
+  gather(key = obstype_year,
+         value = obs_values,
+         -continent,-country)%>%
+  separate(obstype_year, into = c("obs_type","year"), sep = "_", convert = TRUE) ## convert makes year a number
+str(gap_long)
+```
+
+## plot long data
+
+```{r}
+canada_df <- gap_long %>% 
+  filter(country == "Canada",
+         obs_type == "lifeExp")
+ggplot(data = canada_df, aes(x = year, y = obs_values))+
+  geom_line()
+```
+##plot the life exp of all countries in the Americas
+```{r}
+life_df<-gap_long %>% 
+  filter(obs_type == "lifeExp",
+         continent == "Americas")
+
+ggplot(life_df, aes(x=year, y=obs_values,color=country))+
+  geom_line()
+```
+#assignment
+```{r}
+##plot mean life exp for each continent 1982 - 2007
+head(gap_long)
+meanlife_cont<-gap_long%>%
+  filter((year >= 1952 | year <= 2007) & obs_type == "lifeExp")%>%
+  group_by(continent, year)%>%
+  summarize(mean_lifeExp = mean(obs_values))
+meanlife_cont
+ggplot(meanlife_cont, aes(x = year, y = mean_lifeExp, color = continent))+
+  geom_line()
+```
+
 

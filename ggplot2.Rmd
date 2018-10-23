@@ -72,6 +72,10 @@ gap_grouped<-gapminder%>%
   ungroup()%>%
   arrange(-max_gdp)
 
+## read in the data. (same URL as yesterday, with co2.csv instead of gapminder.csv)
+co2 <- read_csv("https://raw.githubusercontent.com/OHI-Science/data-science-training/master/data/co2.csv")
+
+co2 %>% head()
 
 ```
 

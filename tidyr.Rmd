@@ -48,18 +48,20 @@ ggplot(life_df, aes(x=year, y=obs_values,color=country))+
 ```
 #assignment
 ```{r}
-##plot mean life exp for each continent 1982 - 2007
+##filter data for mean life exp for each continent 1982 - 2007
 head(gap_long)
 meanlife_cont<-gap_long%>%
-  filter((year >= 1982 & year <= 2007) & obs_type == "lifeExp")%>%
+  filter(year >= 1982 & year <= 2007 & obs_type == "lifeExp")%>%
   group_by(continent, year)%>%
   summarize(mean_lifeExp = mean(obs_values))
 meanlife_cont
+#plot
 ggplot(meanlife_cont, aes(x = year, y = mean_lifeExp, color = continent))+
   geom_line()+
   xlab("Year")+
   ylab("Life Expectancy")+
-  ggtitle("Mean life expectancy per continent, 1982-2007")
+  ggtitle("Mean life expectancy per continent, 1982-2007")+
+  theme_bw()
 ```
 
 

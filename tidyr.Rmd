@@ -1,0 +1,13 @@
+---
+title: "tidyr"
+author: "Leah Crowe"
+date: "October 23, 2018"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+## read in gapminder data in wide format
+gap_wide <- readr::read_csv('https://raw.githubusercontent.com/OHI-Science/data-science-training/master/data/gapminder_wide.csv')
+
+```
+

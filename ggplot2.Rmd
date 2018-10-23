@@ -10,8 +10,8 @@ output: html_document
 We're learning ggplot2 and it's going to be amazing!
 
 ```{r}
-#install.packages('tidyverse')
-#library(tidyverse)
+install.packages('tidyverse')
+library(tidyverse)
 
 #National Parks in California
 ca <- read_csv("https://raw.githubusercontent.com/OHI-Science/data-science-training/master/data/ca.csv") 
@@ -64,6 +64,14 @@ gapminder%>%
 gapminder%>%
   filter(country %in% c("Egypt","Vietnam"))%>%
   mutate(maxgdp = max(gdpPercap))
+
+gap_grouped<-gapminder%>%
+  group_by(country)%>%
+  mutate(gdp = pop*gdpPercap,
+         max_gdp = max(gdp))%>%
+  ungroup()%>%
+  arrange(-max_gdp)
+
 
 ```
 

@@ -56,7 +56,10 @@ meanlife_cont<-gap_long%>%
   summarize(mean_lifeExp = mean(obs_values))
 meanlife_cont
 ggplot(meanlife_cont, aes(x = year, y = mean_lifeExp, color = continent))+
-  geom_line()
+  geom_line()+
+  xlab("Year")+
+  ylab("Life Expectancy")+
+  ggtitle("Mean life expectancy per continent, 1952-2007")
 ```
 
 

@@ -53,7 +53,8 @@ head(gap_long)
 meanlife_cont<-gap_long%>%
   filter(year >= 1982 & year <= 2007 & obs_type == "lifeExp")%>%
   group_by(continent, year)%>%
-  summarize(mean_lifeExp = mean(obs_values))
+  summarize(mean_lifeExp = mean(obs_values))%>%
+  ungroup()
 meanlife_cont
 #plot
 ggplot(meanlife_cont, aes(x = year, y = mean_lifeExp, color = continent))+
@@ -64,4 +65,19 @@ ggplot(meanlife_cont, aes(x = year, y = mean_lifeExp, color = continent))+
   theme_bw()
 ```
 
+## spread()
+```{r}
+gap_normal<-gap_long %>% 
+  spread(obs_type,
+         obs_values)
+
+gap_long%>%
+  mutate(type_year = paste0(obs_type,"_",year))%>%
+  dplyr::select(-obs_type,-year)%>%
+  spread(type_year, obs_values)
+
+gap_long%>%
+  unite(type_year,obs_type,year, sep = "_", remove = TRUE)%>%
+  spread(type_year, obs_values)
+```
 
